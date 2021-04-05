@@ -13,13 +13,13 @@ app.use(morgan('dev'));
 app.use(cors());
 
 app.post('/api/summoner', async (req, res) => {
-  const {summonerName} = req.body;
+  const { summonerName } = req.body;
   //console.log(encodeURI(summonerName))
   try {
     const result = await axios.get(`https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/${encodeURI(summonerName)}?api_key=${process.env.RIOT_API_KEY}`);
-    if(result.status === 200){
+    if (result.status === 200) {
       res.json(result.data);
-    }else if(result.status === 404){
+    } else if (result.status === 404) {
       res.json("Not Found");
     }
   } catch (e) {
@@ -29,7 +29,7 @@ app.post('/api/summoner', async (req, res) => {
 })
 
 app.post('/api/league', async (req, res) => {
-  const {summonerId} = req.body;
+  const { summonerId } = req.body;
   //console.log(summonerId);
   try {
     const result = await axios.get(`https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${encodeURI(summonerId)}?api_key=${process.env.RIOT_API_KEY}`);
@@ -40,7 +40,7 @@ app.post('/api/league', async (req, res) => {
 })
 
 app.post('/api/matches', async (req, res) => {
-  const {accountId} = req.body;
+  const { accountId } = req.body;
   //console.log(accountId);
   try {
     const result = await axios.get(`https://kr.api.riotgames.com/lol/match/v4/matchlists/by-account/${accountId}?api_key=${process.env.RIOT_API_KEY}`);
@@ -51,14 +51,30 @@ app.post('/api/matches', async (req, res) => {
 })
 
 app.post('/api/match', async (req, res) => {
-  const {gameId} = req.body;
+  const { gameId } = req.body;
   //console.log(gameId)
   try {
     const result = await axios.get(`https://kr.api.riotgames.com/lol/match/v4/matches/${gameId}?api_key=${process.env.RIOT_API_KEY}`);
-   res.send(result.data); 
+    res.send(result.data);
   } catch (e) {
     console.log(e.message)
   }
+})
+
+app.get('/api/champinfo', async (req, res) => {
+  const result = await axios.get('http://ddragon.leagueoflegends.com/cdn/11.1.1/data/ko_KR/champion.json');
+  //console.log(result.data);
+  res.json({ champinfo: result.data });
+})
+
+app.get('/api/spellinfo', async (req, res) => {
+  const result = await axios.get('http://ddragon.leagueoflegends.com/cdn/11.1.1/data/ko_KR/summoner.json');
+  res.json({ spellinfo: result.data });
+})
+
+app.get('/api/runeinfo', async (req, res) => {
+  const result = await axios.get('https://ddragon.leagueoflegends.com/cdn/11.1.1/data/ko_KR/runesReforged.json');
+  res.json({ runeinfo: result.data });
 })
 
 app.listen(PORT, () => console.log(`🚀 Express Server Running on http://localhost:${PORT}`));
