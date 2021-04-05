@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon --exec babel-node server.js",
     "build": "babel src --out-dir build",
-    "start": "node build/server"
+    "start": "node build/server.js"
   },
   "keywords": [],
   "author": "",
